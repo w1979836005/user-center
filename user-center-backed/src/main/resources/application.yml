@@ -33,3 +33,11 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.gaoqiao.usercenterbacked.controller
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+  global-config:
+    db-config:
+      logic-delete-field: isDelete
+      logic-delete-value: 1
+      logic-not-delete-value: 0

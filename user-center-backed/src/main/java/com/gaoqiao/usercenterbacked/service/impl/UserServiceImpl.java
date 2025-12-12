@@ -97,7 +97,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         //查询比对
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("userAccount",userAccount);
-        queryWrapper.eq("userPassword",newPassword);
+        queryWrapper.eq("password",newPassword);
 
         User user = userMapper.selectOne(queryWrapper);
 
@@ -106,12 +106,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             return null;
         }
 
-        //记录用户登录态
-        request.getSession().setAttribute(USER_LOGIN_STATE,user);
-
         //用户脱敏
+        User safetyUser = new User();
+        safetyUser.setId(user.getId());
+        safetyUser.setUsername(user.getUsername());
+        safetyUser.setAvatarUrl(user.getAvatarUrl());
+        safetyUser.setGender(user.getGender());
+        safetyUser.setUserAccount(user.getUserAccount());
+        safetyUser.setPhone(user.getPhone());
+        safetyUser.setEmail(user.getEmail());
+        safetyUser.setCreateTime(user.getCreateTime());
 
-        return user;
+
+        //记录用户登录态
+        request.getSession().setAttribute(USER_LOGIN_STATE,safetyUser);
+
+
+        return safetyUser;
     }
 }
 
