@@ -1,21 +1,35 @@
 server:
   port: 8080
-
-mybatis:
-  # 指定Mybatis的Mapper文件 (修正后的注释)
-  mapper-locations: classpath:mappers/*xml
-  # 指定Mybatis的实体目录 (修正后的注释)
-  type-aliases-package: com.gaoqiao.usercenterbacked.mybatis.entity
+  servlet:
+    context-path: /api
 # 数据库配置
 spring:
+  application:
+    name: user-center
   datasource:
     # 数据库连接 URL
     # 请将 your_database_name 替换为你的数据库名
     # serverTimezone=Asia/Shanghai 是为了避免时区问题
-    url: jdbc:mysql://localhost:3306/user_center?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/user_center
     # 数据库用户名 (请替换)
     username: root
     # 数据库密码 (请替换)
     password: 123456
     # 数据库驱动类 (推荐使用 MySQL 8.x 版本的驱动)
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+knife4j:
+  enable: true
+  openapi:
+    title: Knife4j官方文档
+    description: "`我是测试`,**你知道吗**
+    # aaa"
+    email: xiaoymin@foxmail.com
+    concat: 八一菜刀
+    version: v1.0
+    group:
+      test1:
+        group-name: 默认分组
+        api-rule: package
+        api-rule-resources:
+          - com.gaoqiao.usercenterbacked.controller
