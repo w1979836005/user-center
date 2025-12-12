@@ -239,6 +239,8 @@ avatarUrl 用户头像 varchar
 
 gender 性别 tinyint  0 -女 1-男
 
+userAccount 用户账户 varchar
+
 password 密码 varchar
 
 phone 电话号码 varchar
@@ -263,6 +265,7 @@ CREATE TABLE `user` (
   `username` VARCHAR(50) NOT NULL COMMENT '用户名',
   `avatarUrl` VARCHAR(255) DEFAULT NULL COMMENT '用户头像URL',
   `gender` TINYINT DEFAULT 0 COMMENT '性别：0-女, 1-男',
+  `userAccount` VARCHAR(255) NOT NULL COMMENT '用户账户',
   `password` VARCHAR(255) NOT NULL COMMENT '密码（加密存储）',
   `phone` VARCHAR(20) DEFAULT NULL COMMENT '电话号码',
   `email` VARCHAR(100) DEFAULT NULL COMMENT '电子邮件',

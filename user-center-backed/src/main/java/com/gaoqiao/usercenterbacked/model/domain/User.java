@@ -1,7 +1,9 @@
 package com.gaoqiao.usercenterbacked.model.domain;
 
-import com.baomidou.mybatisplus.annotation.*;
-
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
@@ -35,6 +37,11 @@ public class User implements Serializable {
     private Integer gender;
 
     /**
+     * 用户账户
+     */
+    private String userAccount;
+
+    /**
      * 密码（加密存储）
      */
     private String password;
@@ -57,7 +64,6 @@ public class User implements Serializable {
     /**
      * 是否删除：0-未删除, 1-已删除（逻辑删除）
      */
-    @TableLogic  //逻辑删除标识
     private Integer isDelete;
 
     /**
