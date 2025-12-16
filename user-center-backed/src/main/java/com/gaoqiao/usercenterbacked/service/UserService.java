@@ -4,6 +4,7 @@ import com.gaoqiao.usercenterbacked.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
 * @author 19798
@@ -28,4 +29,15 @@ public interface UserService extends IService<User> {
      * @return 脱敏用户
      */
     User doLogin(String userAccount, String userPassword, HttpServletRequest request);
+
+
+    int userLogout(HttpServletRequest request);
+
+
+    User getCurrentUser(HttpServletRequest request);
+
+    User getSafetyUser(User user);
+
+
+    List<User> searchUsers(String username);
 }

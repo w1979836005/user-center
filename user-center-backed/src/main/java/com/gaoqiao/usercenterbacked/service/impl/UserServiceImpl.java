@@ -14,6 +14,9 @@ import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
 * @author 19798
@@ -109,23 +112,76 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
 
         //用户脱敏
+        User safetyUser = getSafetyUser(user);
+
+        //记录用户登录态
+        request.getSession().setAttribute(USER_LOGIN_STATE,safetyUser);
+
+        return safetyUser;
+    }
+
+    @Override
+    public int userLogout(HttpServletRequest request) {
+        request.getSession().removeAttribute(USER_LOGIN_STATE);
+        return 0;
+    }
+
+    @Override
+    public User getCurrentUser(HttpServletRequest request) {
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+
+        if(userObj == null) {
+            return null;
+        }
+
+        User user =  (User) userObj;
+
+        //查询数据库用户
+        User dbUser =  this.getById(user.getId());
+
+        //用户脱敏
+        User safetyUser = getSafetyUser(dbUser);
+
+        return safetyUser;
+    }
+
+    @Override
+    public User getSafetyUser(User user) {
+        //用户脱敏
         User safetyUser = new User();
         safetyUser.setId(user.getId());
         safetyUser.setUsername(user.getUsername());
         safetyUser.setAvatarUrl(user.getAvatarUrl());
         safetyUser.setGender(user.getGender());
         safetyUser.setUserAccount(user.getUserAccount());
+        safetyUser.setUserRole(user.getUserRole());
         safetyUser.setPhone(user.getPhone());
         safetyUser.setEmail(user.getEmail());
         safetyUser.setCreateTime(user.getCreateTime());
 
 
-        //记录用户登录态
-        request.getSession().setAttribute(USER_LOGIN_STATE,safetyUser);
-
-
         return safetyUser;
     }
+
+    @Override
+    public List<User> searchUsers(String username) {
+        if(username == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("username",username);
+        List<User> userList = userMapper.selectList(queryWrapper);
+
+        //用户脱敏
+        List<User> safetyUserList = new ArrayList<>();
+        for(User user : userList) {
+            safetyUserList.add(getSafetyUser(user));
+        }
+
+        return safetyUserList;
+    }
+
 }
 
 
