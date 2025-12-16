@@ -2,6 +2,8 @@ package com.gaoqiao.usercenterbacked.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gaoqiao.usercenterbacked.common.ErrorCode;
+import com.gaoqiao.usercenterbacked.exception.BusinessException;
 import com.gaoqiao.usercenterbacked.model.domain.User;
 import com.gaoqiao.usercenterbacked.service.UserService;
 import com.gaoqiao.usercenterbacked.mapper.UserMapper;
@@ -35,20 +37,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         //校验
         if(StringUtils.isAnyBlank(userAccount,userPassword,checkPassword)) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
         }
 
         if(userAccount.length() < 4) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号小于4位");
         }
 
         if(userPassword.length() < 8 || checkPassword.length() < 8) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "密码小于8位");
         }
 
         //密码是否相同
         if(!userPassword.equals(checkPassword)) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "两次密码不一致");
         }
 
         //账户不可以重复
@@ -57,7 +59,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         long count = userMapper.selectCount(queryWrapper);
 
         if(count > 0) {
-            return -1;
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号重复");
         }
 
         //加密密码
@@ -72,7 +74,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         boolean saveResult = this.save(user);
         if(!saveResult) {
-            return -1;
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "保存失败，系统错误");
         }
 
         return user.getId();
@@ -82,15 +84,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public User doLogin(String userAccount, String userPassword, HttpServletRequest request) {
 
         if(StringUtils.isAnyBlank(userAccount,userPassword)) {
-            return null;
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
         }
 
         if(userAccount.length() < 4) {
-            return null;
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号小于4位");
         }
 
         if(userPassword.length() < 8 ) {
-            return null;
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "密码小于8位");
         }
 
         String newPassword = DigestUtils.md5DigestAsHex((SLAT+userPassword).getBytes());
@@ -103,7 +105,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         if(user == null) {
             log.info("user is null, maybe no user or userPassword error");
-            return null;
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码不正确");
         }
 
         //用户脱敏

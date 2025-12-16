@@ -37,6 +37,7 @@ public class UserController {
             throw new BusinessException(ErrorCode.NULL_ERROR);
         }
 
+
         long result = userService.userRegister(userAccount, userPassword, checkPassword);
 
         return ResultUtils.success(result);
